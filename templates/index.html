@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Studio — Premium TTS</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR NAV ══════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🎙️</div>
+    <div class="brand-text">
+      <h1>Voice Studio</h1>
+      <span>Premium TTS Engine</span>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <button class="nav-btn active" data-tab="clone" onclick="switchTab('clone')">
+      <span class="nav-icon">🧬</span>
+      <span class="nav-label">Voice Cloning</span>
+      <span class="nav-badge">AI</span>
+    </button>
+    <button class="nav-btn" data-tab="custom" onclick="switchTab('custom')">
+      <span class="nav-icon">🎤</span>
+      <span class="nav-label">Custom Voice</span>
+    </button>
+    <button class="nav-btn" data-tab="normal" onclick="switchTab('normal')">
+      <span class="nav-icon">🔊</span>
+      <span class="nav-label">Normal Voices</span>
+    </button>
+    <button class="nav-btn" data-tab="library" onclick="switchTab('library')">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Voice Library</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-stats">
+      <div class="stat-item">
+        <span class="stat-num" id="stat-profiles">0</span>
+        <span class="stat-label">Profiles</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">14</span>
+        <span class="stat-label">Languages</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">10</span>
+        <span class="stat-label">Styles</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════ MOBILE HEADER ══════════ -->
+<header class="mobile-header">
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <span class="mobile-title">🎙️ Voice Studio</span>
+</header>
+
+<!-- ══════════ MAIN CONTENT ══════════ -->
+<main class="main-content">
+
+  <!-- ══════════ TAB: VOICE CLONING ══════════ -->
+  <section class="tab-panel active" id="tab-clone">
+    <!-- Hero -->
+    <div class="hero-card">
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-badge">AI-Powered</div>
+        <h2>Voice Cloning Studio</h2>
+        <p>Clone your voice and generate speech in any language, accent, and style.
+           Paste up to <strong>100,000 words</strong> — the engine handles everything.</p>
+        <div class="hero-features">
+          <span class="feature-chip">🧬 Voice Identity Transfer</span>
+          <span class="feature-chip">🌍 14 Languages</span>
+          <span class="feature-chip">🎭 10 Styles</span>
+          <span class="feature-chip">📄 100K Words</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Row -->
+    <div class="settings-grid">
+      <div class="setting-card">
+        <label class="setting-label">
+          <span class="label-icon">🌍</span> Language
+        </label>
+        <select id="clone-lang" class="select-premium"></select>
+      </div>
+      <div class="setting-card">
+        <label class="setting-label">
+          <span class="label-icon">🗣️</span> Accent / Region
+        </label>
+        <select id="clone-accent" class="select-premium"></select>
+      </div>
+      <div class="setting-card">
+        <label class="setting-label">
+          <span class="label-icon">🎭</span> Speaking Style
+        </label>
+        <select id="clone-style" class="select-premium"></select>
+      </div>
+      <div class="setting-card">
+        <label class="setting-label">
+          <span class="label-icon">👤</span> Voice Profile
+        </label>
+        <div class="select-with-btn">
+          <select id="clone-profile" class="select-premium"></select>
+          <button class="btn-icon" onclick="refreshProfiles()" title="Refresh profiles">🔄</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Editor -->
+    <div class="editor-card">
+      <div class="editor-header">
+        <div class="editor-title">
+          <span class="editor-icon">✍️</span>
+          <h3>Script Editor</h3>
+          <span class="editor-subtitle">Paste or type your text below</span>
+        </div>
+        <div class="editor-toolbar">
+          <button class="toolbar-btn" onclick="pasteClipboard('clone')" title="Paste from clipboard">📋 Paste</button>
+          <button class="toolbar-btn" onclick="insertSample('clone')" title="Insert sample text">📝 Sample</button>
+          <button class="toolbar-btn" onclick="clearText('clone')" title="Clear all text">🗑️ Clear</button>
+        </div>
+      </div>
+      <textarea id="clone-text" class="script-textarea"
+        placeholder="Click here and start typing, or paste your full script...
+
+• Paste articles, blog posts, video scripts — any text
+• Your saved voice profile will be applied
+• Supports up to 100,000 words
+• Auto-split into chunks and merged seamlessly"></textarea>
+      <div class="editor-footer">
+        <div class="word-counter">
+          <span id="clone-wc">Words: 0</span>
+          <span class="separator">·</span>
+          <span id="clone-cc">Chars: 0</span>
+          <span class="separator">·</span>
+          <span id="clone-est">Est. ~0 min</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar" id="clone-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fine-tune Collapsible -->
+    <div class="finetune-card">
+      <button class="finetune-toggle" onclick="toggleFinetune('clone')">
+        <span>⚙️ Fine-tune Voice Parameters</span>
+        <span class="toggle-arrow" id="clone-ft-arrow">▾</span>
+      </button>
+      <div class="finetune-body" id="clone-ft-body">
+        <div class="slider-grid">
+          <div class="slider-field">
+            <label>Timbre <span class="slider-val" id="clone-timbre-val">0.00</span></label>
+            <input type="range" id="clone-timbre" min="0" max="0.25" step="0.01" value="0">
+            <span class="slider-hint">0 = cleanest output</span>
+          </div>
+          <div class="slider-field">
+            <label>Tempo <span class="slider-val" id="clone-tempo-val">0.00</span></label>
+            <input type="range" id="clone-tempo" min="0" max="0.5" step="0.05" value="0">
+            <span class="slider-hint">0 = TTS pace</span>
+          </div>
+          <div class="slider-field">
+            <label>Pitch × <span class="slider-val" id="clone-pitch-val">1.00</span></label>
+            <input type="range" id="clone-pitch" min="0.7" max="1.3" step="0.02" value="1">
+            <span class="slider-hint">1.0 = natural pitch</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate Button -->
+    <button class="btn-generate" id="clone-gen-btn" onclick="generateClone()">
+      <span class="btn-gen-icon">▶</span>
+      <span class="btn-gen-text">Generate Voice Output</span>
+    </button>
+
+    <!-- Progress -->
+    <div class="generation-progress" id="clone-progress" style="display:none">
+      <div class="progress-spinner"></div>
+      <span class="progress-text" id="clone-progress-text">Generating...</span>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="clone-result" style="display:none"></div>
+  </section>
+
+  <!-- ══════════ TAB: CUSTOM VOICE ══════════ -->
+  <section class="tab-panel" id="tab-custom">
+    <div class="hero-card hero-purple">
+      <div class="hero-glow hero-glow-purple"></div>
+      <div class="hero-content">
+        <div class="hero-badge badge-purple">Voice Lab</div>
+        <h2>Custom Voice Creator</h2>
+        <p>Upload your voice sample (15–30 seconds), and the AI will analyze your pitch, tone, and
+           vocal characteristics. Your voice profile is saved permanently — upload once, use forever.</p>
+        <div class="hero-features">
+          <span class="feature-chip chip-purple">🎤 Upload Once</span>
+          <span class="feature-chip chip-purple">🧹 AI Noise Cleaning</span>
+          <span class="feature-chip chip-purple">📊 Pitch Analysis</span>
+          <span class="feature-chip chip-purple">💾 Save Forever</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="upload-card">
+      <div class="upload-section">
+        <label class="setting-label"><span class="label-icon">👤</span> Profile Name</label>
+        <input type="text" id="custom-name" class="input-premium" value="MyVoice"
+          placeholder="e.g. MyVoice, Anas, Dad">
+      </div>
+
+      <div class="upload-section">
+        <label class="setting-label"><span class="label-icon">🎚️</span> Cleaning Settings</label>
+        <div class="slider-row-compact">
+          <div class="slider-field">
+            <label>Noise Removal <span class="slider-val" id="custom-noise-val">1.2</span></label>
+            <input type="range" id="custom-noise" min="0.5" max="2.5" step="0.1" value="1.2">
+          </div>
+          <div class="slider-field">
+            <label>Echo Removal <span class="slider-val" id="custom-reverb-val">0.30</span></label>
+            <input type="range" id="custom-reverb" min="0" max="0.8" step="0.05" value="0.3">
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-section">
+        <label class="setting-label"><span class="label-icon">📁</span> Voice Sample</label>
+        <p class="upload-hint">Supported: WAV · MP3 · OGG · M4A · OPUS · FLAC · AAC (15–60 seconds recommended)</p>
+        <div class="upload-dropzone" id="custom-dropzone">
+          <input type="file" id="custom-file" accept="audio/*" style="display:none">
+          <div class="dropzone-content">
+            <div class="dropzone-icon">🎤</div>
+            <p class="dropzone-text">Drag & drop your voice file here</p>
+            <p class="dropzone-sub">or click to browse</p>
+          </div>
+          <div class="dropzone-selected" id="custom-file-info" style="display:none">
+            <span class="file-icon">🎵</span>
+            <span class="file-name" id="custom-file-name"></span>
+            <button class="file-remove" onclick="removeFile()">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-upload" id="custom-upload-btn" onclick="uploadVoice()">
+        <span>💾</span> Analyze & Save Voice Profile
+      </button>
+
+      <div class="upload-status" id="custom-status"></div>
+    </div>
+
+    <!-- Profiles List -->
+    <div class="profiles-card">
+      <div class="profiles-header">
+        <h3>📚 Saved Voice Profiles</h3>
+        <button class="btn-icon-text" onclick="refreshProfiles()">🔄 Refresh</button>
+      </div>
+      <div class="profiles-list" id="profiles-list">
+        <div class="profiles-empty">No profiles yet. Upload your first voice sample above.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ TAB: NORMAL VOICES ══════════ -->
+  <section class="tab-panel" id="tab-normal">
+    <div class="hero-card hero-green">
+      <div class="hero-glow hero-glow-green"></div>
+      <div class="hero-content">
+        <div class="hero-badge badge-green">Quick TTS</div>
+        <h2>Normal Voice Generator</h2>
+        <p>Generate speech using built-in premium voices — no voice profile needed.
+           Just type your text, choose a voice, and hit generate.</p>
+        <div class="hero-features">
+          <span class="feature-chip chip-green">⚡ No Upload Needed</span>
+          <span class="feature-chip chip-green">🌍 14 Languages</span>
+          <span class="feature-chip chip-green">🎭 10 Styles</span>
+          <span class="feature-chip chip-green">📄 100K Words</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-grid">
+      <div class="setting-card">
+        <label class="setting-label"><span class="label-icon">🌍</span> Language</label>
+        <select id="normal-lang" class="select-premium"></select>
+      </div>
+      <div class="setting-card">
+        <label class="setting-label"><span class="label-icon">🗣️</span> Voice</label>
+        <select id="normal-accent" class="select-premium"></select>
+      </div>
+      <div class="setting-card" style="grid-column: span 2">
+        <label class="setting-label"><span class="label-icon">🎭</span> Speaking Style</label>
+        <select id="normal-style" class="select-premium"></select>
+      </div>
+    </div>
+
+    <!-- Script Editor -->
+    <div class="editor-card">
+      <div class="editor-header">
+        <div class="editor-title">
+          <span class="editor-icon">✍️</span>
+          <h3>Text Editor</h3>
+          <span class="editor-subtitle">Type or paste your text</span>
+        </div>
+        <div class="editor-toolbar">
+          <button class="toolbar-btn" onclick="pasteClipboard('normal')" title="Paste">📋 Paste</button>
+          <button class="toolbar-btn" onclick="insertSample('normal')" title="Sample">📝 Sample</button>
+          <button class="toolbar-btn" onclick="clearText('normal')" title="Clear">🗑️ Clear</button>
+        </div>
+      </div>
+      <textarea id="normal-text" class="script-textarea"
+        placeholder="Type or paste your text here...
+
+No voice upload needed — just use the built-in voices.
+Works great for quick TTS generation in any language."></textarea>
+      <div class="editor-footer">
+        <div class="word-counter">
+          <span id="normal-wc">Words: 0</span>
+          <span class="separator">·</span>
+          <span id="normal-cc">Chars: 0</span>
+          <span class="separator">·</span>
+          <span id="normal-est">Est. ~0 min</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar" id="normal-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-generate btn-generate-green" id="normal-gen-btn" onclick="generateNormal()">
+      <span class="btn-gen-icon">▶</span>
+      <span class="btn-gen-text">Generate Voice</span>
+    </button>
+
+    <div class="generation-progress" id="normal-progress" style="display:none">
+      <div class="progress-spinner"></div>
+      <span class="progress-text" id="normal-progress-text">Generating...</span>
+    </div>
+
+    <div class="result-card" id="normal-result" style="display:none"></div>
+  </section>
+
+  <!-- ══════════ TAB: VOICE LIBRARY ══════════ -->
+  <section class="tab-panel" id="tab-library">
+    <div class="hero-card hero-amber">
+      <div class="hero-glow hero-glow-amber"></div>
+      <div class="hero-content">
+        <div class="hero-badge badge-amber">Collection</div>
+        <h2>Voice Library</h2>
+        <p>Browse all available voices across 14 languages. Preview voice characteristics
+           and find the perfect voice for your project.</p>
+      </div>
+    </div>
+
+    <div class="library-search">
+      <input type="text" id="library-search" class="input-premium" placeholder="🔍 Search voices...">
+    </div>
+
+    <div class="library-grid" id="library-grid"></div>
+  </section>
+
+</main>
+
+<!-- ══════════ TOAST NOTIFICATION ══════════ -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
